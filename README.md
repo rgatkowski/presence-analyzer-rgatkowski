@@ -1,2 +1,4 @@
-presence-analyzer-rgatkowski
-============================
+Presence Analyzer
+=================
+
+Calculate and show employees presence statistics.
