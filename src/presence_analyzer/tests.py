@@ -7,8 +7,7 @@ import json
 import datetime
 import unittest
 
-import main
-import utils
+from presence_analyzer import main, utils
 
 
 TEST_DATA_CSV = os.path.join(
@@ -77,6 +76,20 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(len(data), 8)
         self.assertListEqual(data[0], ['Weekday', 'Presence (s)'])
         self.assertListEqual(data[2], ['Tue', 30047.0])
+
+    def test_api_presence_start_end_view(self):
+        '''
+        Test mean time to come to the office and mean time he leaves.
+        '''
+        resp = self.client.get('/api/v1/presence_start_end/10')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+        data = json.loads(resp.data)
+        print(data)
+        self.assertEqual(len(data), 7)
+        self.assertListEqual(data[0], ['Mon', 0, 0])
+        self.assertListEqual(data[1], ['Tue', 34745.0, 64792.0])
+        self.assertListEqual(data[2], ['Wed', 33592.0, 58057.0])
 
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
@@ -149,6 +162,22 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         self.assertItemsEqual(group_data.keys(), [0, 1, 2, 3, 4, 5, 6])
         self.assertListEqual(group_data[5], [])
         self.assertIn(30047.0, group_data[1])
+
+    def test_group_by_weekday_with_sec(self):
+        '''
+        Test group presence entries by weekday in seconds.
+        '''
+        data = utils.get_data()
+        group_data = utils.group_by_weekday_with_sec(data[10])
+        print(group_data)
+        self.assertIsInstance(group_data, dict)
+        self.assertItemsEqual(group_data.keys(), [0, 1, 2, 3, 4, 5, 6])
+        self.assertIsInstance(group_data[0], dict)
+        self.assertDictEqual(group_data[5], {'start': [], 'end': []})
+        self.assertIsInstance(group_data[0]['start'], list)
+        self.assertIsInstance(group_data[0]['end'], list)
+        self.assertIn(34745, group_data[1]['start'])
+        self.assertIn(64792, group_data[1]['end'])
 
 
 def suite():

@@ -6,11 +6,11 @@ Helper functions used in views.
 import csv
 from json import dumps
 from functools import wraps
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import Response
 
-from main import app
+from presence_analyzer.main import app
 
 import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
@@ -97,3 +97,16 @@ def mean(items):
     Calculates arithmetic mean. Returns zero for empty lists.
     """
     return float(sum(items)) / len(items) if len(items) > 0 else 0
+
+
+def group_by_weekday_with_sec(items):
+    """
+    Groups data by weekday with seconds.
+    """
+    result = {i: {"start": [], "end": []} for i in range(7)}
+    for date in items:
+        start = items[date]['start']
+        end = items[date]['end']
+        result[date.weekday()]["start"].append(seconds_since_midnight(start))
+        result[date.weekday()]["end"].append(seconds_since_midnight(end))
+    return result
