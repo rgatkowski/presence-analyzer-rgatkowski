@@ -45,7 +45,7 @@ def mean_time_weekday_view(user_id):
         return []
 
     weekdays = group_by_weekday(data[user_id])
-    result = [(calendar.day_abbr[weekday], sum(intervals))
+    result = [(calendar.day_abbr[weekday], mean(intervals))
               for weekday, intervals in weekdays.items()]
 
     return result
