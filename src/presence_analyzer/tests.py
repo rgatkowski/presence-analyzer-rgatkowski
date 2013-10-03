@@ -7,8 +7,7 @@ import json
 import datetime
 import unittest
 
-import main
-import utils
+from presence_analyzer import main, utils
 
 
 TEST_DATA_CSV = os.path.join(
