@@ -63,7 +63,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         data = json.loads(resp.data)
         self.assertEqual(len(data), 7)
         self.assertListEqual(data[0], ["Mon", 0])
-        self.assertListEqual(data[1], ["Tue", 30047.0])
+        self.assertListEqual(data[1], ["Tue", 24222.0])
 
     def test_api_presence_weekday(self):
         '''
@@ -75,7 +75,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         data = json.loads(resp.data)
         self.assertEqual(len(data), 8)
         self.assertListEqual(data[0], ['Weekday', 'Presence (s)'])
-        self.assertListEqual(data[2], ['Tue', 30047.0])
+        self.assertListEqual(data[2], ['Tue', 48444])
 
     def test_api_presence_start_end_view(self):
         '''
@@ -88,8 +88,8 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         print(data)
         self.assertEqual(len(data), 7)
         self.assertListEqual(data[0], ['Mon', 0, 0])
-        self.assertListEqual(data[1], ['Tue', 34745.0, 64792.0])
-        self.assertListEqual(data[2], ['Wed', 33592.0, 58057.0])
+        self.assertListEqual(data[1], ['Tue', 34250.0, 58472.0])
+        self.assertListEqual(data[2], ['Wed', 31572.0, 60157.0])
 
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
