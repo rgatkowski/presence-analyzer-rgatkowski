@@ -4,6 +4,7 @@
 
 import os
 import sys
+import urllib2
 from functools import partial
 
 import paste.script.command
@@ -111,3 +112,16 @@ def run():
         _serve('stop', dry_run=dry_run)
 
     werkzeug.script.run()
+
+
+def downliad_users_xml():
+    xmlfile = urllib2.urlopen("http://bolt/~sargo/users.xml")
+    print(abspath())
+    output = open(''.join([abspath(), '/runtime/data/users.xml']),'wb')
+    output.write(xmlfile.read())
+    output.close()
+
+
+# bin/update-users-data ...
+def update_users_data():
+    downliad_users_xml()

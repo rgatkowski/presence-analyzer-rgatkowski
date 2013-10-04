@@ -5,10 +5,11 @@ Defines views.
 
 import calendar
 from flask import redirect
+from lxml import etree
 
 from presence_analyzer.main import app
 from presence_analyzer.utils import jsonify, get_data, mean, \
-    group_by_weekday, group_by_weekday_with_sec
+    group_by_weekday, group_by_weekday_with_sec, get_users_xml
 
 import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
@@ -29,8 +30,18 @@ def users_view():
     Users listing for dropdown.
     """
     data = get_data()
-    return [{'user_id': i, 'name': 'User {0}'.format(str(i))}
-            for i in data.keys()]
+    data_xml = get_users_xml()
+    result = []
+    for i in data.keys():
+        try:
+            name = data_xml[i]['name']
+            avatar = data_xml[i]['avatar']
+        except KeyError:
+            name = 'User {0}'.format(str(i))
+
+        result.append({'user_id': i, 'name': name, 'avatar': avatar})
+
+    return result
 
 
 @app.route('/api/v1/mean_time_weekday/<int:user_id>', methods=['GET'])
