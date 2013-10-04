@@ -114,13 +114,16 @@ def run():
     werkzeug.script.run()
 
 
-def downliad_users_xml():
-    xmlfile = urllib2.urlopen("http://bolt/~sargo/users.xml")
-    output = open(''.join([abspath(), '/runtime/data/users.xml']), 'wb')
+def download_users_xml():
+    #print(abspath(DEBUG_CFG))
+    from presence_analyzer import app
+    app.config.from_pyfile(abspath(DEBUG_CFG))
+    xmlfile = urllib2.urlopen(app.config["USERS_XML_URL"])
+    output = open(abspath('runtime', 'data', 'users.xml'), 'wb')
     output.write(xmlfile.read())
     output.close()
 
 
 # bin/update-users-data ...
 def update_users_data():
-    downliad_users_xml()
+    download_users_xml()
