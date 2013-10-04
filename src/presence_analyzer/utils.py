@@ -73,7 +73,10 @@ def get_users_xml():
 
     It creates structure like this:
     data = {
-        'user_id': 'name': 'full name'
+        'user_id': {
+            'name': 'full name',
+            'avatar': avatar_url
+        }
     }
     """
     data = {}
@@ -95,6 +98,8 @@ def get_users_xml():
             avatar = user.find('avatar').text
         except (ValueError, TypeError):
             log.debug('Problem with line %d: ', i, exc_info=True)
+            name = ''
+            avatar = ''
 
         data[user_id] = {
             'name': name,
@@ -102,24 +107,6 @@ def get_users_xml():
         }
 
     return data
-
-
-#def get_avatar(user):
-#    '''
-#    Get user avatar
-#    '''
-#    tree = etree.parse(app.config['USERS_XML'])
-#    try:
-#        host = tree.xpath("//server/host/text()")[0]
-#    except KeyError:
-#        log.debug('No host in XML file', exc_info=True)
-#        host = ''
-#    try:
-#        avatar = tree.xpath("//user[@id='%s']/avatar/text()" % user)[0]
-#    except KeyError:
-#        log.debug('No avatar for user %d: ', user, exc_info=True)
-#        avatar = ""
-#    return ''.join(host, avatar)
 
 
 def group_by_weekday(items):

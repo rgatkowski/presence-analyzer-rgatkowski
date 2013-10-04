@@ -4,8 +4,8 @@ Defines views.
 """
 
 import calendar
-from flask import redirect
-from lxml import etree
+
+from flask import redirect, render_template, url_for
 
 from presence_analyzer.main import app
 from presence_analyzer.utils import jsonify, get_data, mean, \
@@ -20,7 +20,31 @@ def mainpage():
     """
     Redirects to front page.
     """
-    return redirect('/static/presence_weekday.html')
+    return redirect(url_for('presence_weekday_view_page'))
+
+
+@app.route('/presence_weekday/')
+def presence_weekday_view_page():
+    '''
+    Render presence weekday view
+    '''
+    return render_template('presence_weekday.html')
+
+
+@app.route('/mean_time_weekday/')
+def mean_time_weekday_view_page():
+    '''
+    Render mean time weekday view
+    '''
+    return render_template('mean_time_weekday.html')
+
+
+@app.route('/presence_start_end/')
+def presence_start_end_view_page():
+    '''
+    Render presence start end view
+    '''
+    return render_template('presence_start_end.html')
 
 
 @app.route('/api/v1/users', methods=['GET'])
@@ -38,6 +62,7 @@ def users_view():
             avatar = data_xml[i]['avatar']
         except KeyError:
             name = 'User {0}'.format(str(i))
+            avatar = ''
 
         result.append({'user_id': i, 'name': name, 'avatar': avatar})
 

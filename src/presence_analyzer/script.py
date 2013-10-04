@@ -116,8 +116,7 @@ def run():
 
 def downliad_users_xml():
     xmlfile = urllib2.urlopen("http://bolt/~sargo/users.xml")
-    print(abspath())
-    output = open(''.join([abspath(), '/runtime/data/users.xml']),'wb')
+    output = open(''.join([abspath(), '/runtime/data/users.xml']), 'wb')
     output.write(xmlfile.read())
     output.close()
 

@@ -14,6 +14,10 @@ TEST_DATA_CSV = os.path.join(
     os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_data.csv'
 )
 
+TEST_DATA_XML = os.path.join(
+    os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_users.xml'
+)
+
 
 # pylint: disable=E1103
 class PresenceAnalyzerViewsTestCase(unittest.TestCase):
@@ -26,6 +30,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         Before each test, set up a environment.
         """
         main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
+        main.app.config.update({'USERS_XML': TEST_DATA_XML})
         self.client = main.app.test_client()
 
     def tearDown(self):
@@ -40,7 +45,28 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         """
         resp = self.client.get('/')
         self.assertEqual(resp.status_code, 302)
-        assert resp.headers['Location'].endswith('/presence_weekday.html')
+        assert resp.headers['Location'].endswith('/presence_weekday/')
+
+    def test_presence_weekday_page(self):
+        """
+        Test presence weekday page.
+        """
+        resp = self.client.get('/presence_weekday/')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_mean_time_weekday_page(self):
+        """
+        Test mean time weekday page.
+        """
+        resp = self.client.get('/mean_time_weekday/')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_presence_start_end_page(self):
+        """
+        Test presence start end page.
+        """
+        resp = self.client.get('/presence_start_end/')
+        self.assertEqual(resp.status_code, 200)
 
     def test_api_users(self):
         """
@@ -51,7 +77,11 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
         self.assertEqual(len(data), 2)
-        self.assertDictEqual(data[0], {u'user_id': 10, u'name': u'User 10'})
+        self.assertDictEqual(data[0], {
+            u'user_id': 10,
+            u'name': u'Maciej Zięba',
+            u'avatar': u'https://intranet.stxnext.pl/api/images/users/10'
+        })
 
     def test_api_mean_time_weekday(self):
         '''
@@ -85,7 +115,6 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
-        print(data)
         self.assertEqual(len(data), 7)
         self.assertListEqual(data[0], ['Mon', 0, 0])
         self.assertListEqual(data[1], ['Tue', 34250.0, 58472.0])
@@ -102,6 +131,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         Before each test, set up a environment.
         """
         main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
+        main.app.config.update({'USERS_XML': TEST_DATA_XML})
 
     def tearDown(self):
         """
@@ -169,7 +199,6 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         '''
         data = utils.get_data()
         group_data = utils.group_by_weekday_with_sec(data[10])
-        print(group_data)
         self.assertIsInstance(group_data, dict)
         self.assertItemsEqual(group_data.keys(), [0, 1, 2, 3, 4, 5, 6])
         self.assertIsInstance(group_data[0], dict)
@@ -178,6 +207,18 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         self.assertIsInstance(group_data[0]['end'], list)
         self.assertIn(34745, group_data[1]['start'])
         self.assertIn(64792, group_data[1]['end'])
+
+    def test_get_users_xml(self):
+        '''
+        Test loads users from xml file
+        '''
+        data = utils.get_users_xml()
+        self.assertIsInstance(data, dict)
+        self.assertItemsEqual(data.keys(), [141, 176, 170, 10])
+        self.assertDictEqual(data[10], {
+            u'name': u'Maciej Zięba',
+            u'avatar': u'https://intranet.stxnext.pl/api/images/users/10'
+        })
 
 
 def suite():
