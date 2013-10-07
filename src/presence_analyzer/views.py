@@ -77,7 +77,8 @@ def users_v2_view():
 
         result.append({'user_id': i, 'name': name, 'avatar': avatar})
 
-    return result
+    result_sorted = sorted(result, key=lambda k: k['name'])
+    return result_sorted
 
 
 @app.route('/api/v1/mean_time_weekday/<int:user_id>', methods=['GET'])
