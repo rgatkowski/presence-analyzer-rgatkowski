@@ -7,6 +7,7 @@ import csv
 from json import dumps
 from functools import wraps
 from datetime import datetime
+from lxml import etree
 
 from flask import Response
 
@@ -62,6 +63,48 @@ def get_data():
                 log.debug('Problem with line %d: ', i, exc_info=True)
 
             data.setdefault(user_id, {})[date] = {'start': start, 'end': end}
+
+    return data
+
+
+def get_users_xml():
+    """
+    Extracts users data from XML file and groups it by user_id.
+
+    It creates structure like this:
+    data = {
+        'user_id': {
+            'name': 'full name',
+            'avatar': avatar_url
+        }
+    }
+    """
+    data = {}
+    tree = etree.parse(app.config['USERS_XML'])
+    try:
+        host = tree.xpath("//server/host/text()")[0]
+    except KeyError:
+        log.debug('No host in XML file', exc_info=True)
+        host = ''
+    try:
+        protocol = tree.xpath("//server/protocol/text()")[0]
+    except KeyError:
+        log.debug('No protocol in XML file', exc_info=True)
+        protocol = ''
+    for i, user in enumerate(tree.iter('user')):
+        try:
+            user_id = int(user.get('id'))
+            name = user.find('name').text
+            avatar = user.find('avatar').text
+        except (ValueError, TypeError):
+            log.debug('Problem with line %d: ', i, exc_info=True)
+            name = ''
+            avatar = ''
+
+        data[user_id] = {
+            'name': name,
+            'avatar': ''.join([protocol, '://', host, avatar])
+        }
 
     return data
 

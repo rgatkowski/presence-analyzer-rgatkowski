@@ -4,6 +4,7 @@
 
 import os
 import sys
+import urllib2
 from functools import partial
 
 import paste.script.command
@@ -111,3 +112,18 @@ def run():
         _serve('stop', dry_run=dry_run)
 
     werkzeug.script.run()
+
+
+def download_users_xml():
+    #print(abspath(DEBUG_CFG))
+    from presence_analyzer import app
+    app.config.from_pyfile(abspath(DEBUG_CFG))
+    xmlfile = urllib2.urlopen(app.config["USERS_XML_URL"])
+    output = open(abspath('runtime', 'data', 'users.xml'), 'wb')
+    output.write(xmlfile.read())
+    output.close()
+
+
+# bin/update-users-data ...
+def update_users_data():
+    download_users_xml()
