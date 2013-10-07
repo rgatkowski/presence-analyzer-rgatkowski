@@ -7,7 +7,7 @@ import datetime
 from threading import Lock
 
 
-class decoratorCache(object):
+class DecoratorCache(object):
     '''
     Read date from cache or from file.
     '''
@@ -26,7 +26,7 @@ class decoratorCache(object):
         Execute function.
         """
         with Lock():
-            def wrapped_f(*args):
+            def wrapped_f():
                 now = datetime.datetime.now()
 
                 if (now - self.last_time).total_seconds() > self.sec_timeout:
