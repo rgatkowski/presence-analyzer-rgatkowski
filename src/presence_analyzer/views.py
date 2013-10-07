@@ -72,10 +72,9 @@ def users_v2_view():
             name = data_xml[i]['name']
             avatar = data_xml[i]['avatar']
         except KeyError:
-            name = 'User {0}'.format(str(i))
-            avatar = '/static/img/none.png'
-
-        result.append({'user_id': i, 'name': name, 'avatar': avatar})
+            log.debug('User %d don\'t have name.', i, exc_info=True)
+        else:
+            result.append({'user_id': i, 'name': name, 'avatar': avatar})
 
     result_sorted = sorted(result, key=lambda k: k['name'])
     return result_sorted
