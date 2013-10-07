@@ -6,7 +6,8 @@
                 var loading = $('#loading');
                 $('#user_id').change(function(){
                     var selected_user = $("#user_id").val();
-                    $("#avatar").attr("src",$('option:selected', $("#user_id")).attr('avatar'));
+                    $("#avatar").show();
+                    $("#avatar img").attr("src",$('option:selected', $("#user_id")).attr('avatar'));
                     var chart_div = $('#chart_div');
                     if(selected_user) {
                         loading.show();
@@ -31,7 +32,9 @@
         <select id="user_id" style="display: none">
             <option value="">--</option>
         </select>
-        <div><img id="avatar" src=""/></div>
+        <div  id="avatar" style="display:none">
+            <img alt="Can't display image." src="/static/img/none.png"/>
+        </div>
         <div id="chart_div" style="display: none">
         </div>
         <div id="loading">
