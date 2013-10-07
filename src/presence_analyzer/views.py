@@ -73,7 +73,7 @@ def users_v2_view():
             avatar = data_xml[i]['avatar']
         except KeyError:
             name = 'User {0}'.format(str(i))
-            avatar = ''
+            avatar = '/static/img/none.png'
 
         result.append({'user_id': i, 'name': name, 'avatar': avatar})
 
