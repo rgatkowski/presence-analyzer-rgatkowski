@@ -6,7 +6,6 @@ Defines views.
 import calendar
 import locale
 
-from functools import cmp_to_key
 from flask import redirect, render_template, url_for
 
 from presence_analyzer.main import app

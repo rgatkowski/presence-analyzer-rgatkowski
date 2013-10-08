@@ -87,11 +87,11 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
-        self.assertEqual(len(data), 1)
+        self.assertEqual(len(data), 2)
         self.assertDictEqual(data[0], {
-            u'user_id': 10,
-            u'name': u'Maciej Zięba',
-            u'avatar': u'https://intranet.stxnext.pl/api/images/users/10'
+            u'user_id': 11,
+            u'name': u'Łukasz Lee',
+            u'avatar': u'https://intranet.stxnext.pl/api/images/users/11'
         })
 
     def test_api_mean_time_weekday(self):
@@ -225,7 +225,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         '''
         data = utils.get_users_xml()
         self.assertIsInstance(data, dict)
-        self.assertItemsEqual(data.keys(), [141, 176, 170, 10])
+        self.assertItemsEqual(data.keys(), [141, 176, 170, 10, 11])
         self.assertDictEqual(data[10], {
             u'name': u'Maciej Zięba',
             u'avatar': u'https://intranet.stxnext.pl/api/images/users/10'
