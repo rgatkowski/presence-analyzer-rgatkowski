@@ -81,7 +81,7 @@ def users_v2_view():
     locale.setlocale(locale.LC_ALL, 'pl_PL.UTF-8')
     result_sorted = sorted(
         result,
-        key=lambda  k: k["name"],
+        key=lambda k: k["name"],
         cmp=locale.strcoll
     )
 
