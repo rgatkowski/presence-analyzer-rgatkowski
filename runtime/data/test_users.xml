@@ -22,5 +22,9 @@
             <avatar>/api/images/users/10</avatar>
             <name>Maciej Zięba</name>
         </user>
+	<user id="11">
+            <avatar>/api/images/users/11</avatar>
+            <name>Łukasz Lee</name>
+        </user>
     </users>
 </intranet>
