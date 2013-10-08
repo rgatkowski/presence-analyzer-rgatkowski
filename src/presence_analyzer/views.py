@@ -4,7 +4,9 @@ Defines views.
 """
 
 import calendar
+import locale
 
+from functools import cmp_to_key
 from flask import redirect, render_template, url_for
 
 from presence_analyzer.main import app
@@ -76,7 +78,13 @@ def users_v2_view():
         else:
             result.append({'user_id': i, 'name': name, 'avatar': avatar})
 
-    result_sorted = sorted(result, key=lambda k: k['name'])
+    locale.setlocale(locale.LC_ALL, 'pl_PL.UTF-8')
+    result_sorted = sorted(
+        result,
+        key=lambda  k: k["name"],
+        cmp=locale.strcoll
+    )
+
     return result_sorted
 
 
