@@ -12,6 +12,7 @@ google.load("visualization", "1", {packages:["corechart", "timeline"], 'language
 (function($) {
     $(document).ready(function(){
         var loading = $('#loading');
+        $.ajaxSetup({ cache: false });
         $.getJSON("/api/v2/users", function(result) {
             var dropdown = $("#user_id");
             $.each(result, function(item) {
